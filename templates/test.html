@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>This is a Heading</h1>
+<p>hello there.</p>
+{% if current_user.is_authenticated %}
+  Hi {{ current_user.username }}!
+{% endif %}
+
+<form method = "POST">
+<label for="fname">First name:</label>
+<input type="text" id="fname" name="fname"><br><br>
+<label for="lname">Last name:</label>
+<input type="text" id="lname" name="lname"><br><br>
+<input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
