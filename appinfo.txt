@@ -21,3 +21,7 @@ container = client.containers.get(container_id_or_name)
 ip_add = container.attrs['NetworkSettings']['IPAddress']
 print(ip_add)
 
+
+LINUX: psql postgresql://username:password@localhost:5433/postgres
+
+WINDOWS CMD: psql -h 10.35.64.79 -p 5433 -U username default_database

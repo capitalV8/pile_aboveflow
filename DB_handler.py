@@ -6,15 +6,31 @@ import psycopg2
 #container = client.containers.get("wolverine_overflow-database-1")
 #IP = container.attrs['NetworkSettings']['IPAddress']
 
+
 def connect():
     DBconnection = psycopg2.connect("dbname='postgres' host='database' user='username' password='password' port='5432'")
     DBcursor = DBconnection.cursor()
+    return DBconnection, DBcursor
 
-#IMPORTANT use docker init scripts
-connect()
+DBconnection, DBcursor = connect() # not good, should be in other file.
+
+
+
+
+def check_if_exists(table, column, val):
+    DBcursor.execute(f"""SELECT EXISTS(
+        SELECT 1 FROM {table} WHERE {column} = '{val}'
+         LIMIT 1);""")
+    return DBcursor.fetchone()[0]
+
+def DBexec(query):
+    DBcursor.execute(query)
+    return DBcursor.fetchone()
+
 
 def DBselect(table, column):
     DBcursor.execute("SELECT {} FROM {};".format(column,table))
+    return DBcursor.fetchone()
 
 def DBinsert(table, column, val):
     DBcursor.execute("""INSERT INTO {} ({}) \
@@ -33,7 +49,8 @@ def DBnewcolumn(table_name, column_name, type):
     DBcursor.execute("""ALTER TABLE {}
                      ADD {} {}""".format(table_name, column_name, type))
 
-print("s")
+
+
 
 def update():
     DBconnection.commit()
@@ -41,6 +58,27 @@ def update():
 def disconnect():
     DBcursor.close()
     DBconnection.close()
+
+
+def create_default_table():
+    DBcursor.execute("""
+                     CREATE TABLE users (
+                        username VARCHAR(31),
+                        password VARCHAR(31),
+                        mail VARCHAR(127),
+                        CONSTRAINT primaryk PRIMARY KEY (username)
+                     );
+                     """)
+    
+
+
+
+
+
+
+
+
+
 
 
 #print(DBcursor.fetchall())
