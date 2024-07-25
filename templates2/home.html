@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Wolverine Aboveflow</title>
+    <!--<link rel="icon" type="image/x-icon" href="images/wolverine_icon.ico">-->
+    <link rel="icon" type="image/x-icon" href="../static/wolverine_icon.ico">
+    <link rel="stylesheet" href="../static/style.css">
+  </head>
+
+  <body>
+    <header id="topbar">
+      <div>
+        <a href="/">
+          <img id="logo" src="../static/topbar_logo.png">
+        </a>
+
+          {% if current_user.is_authenticated %}
+            <nav id="header-buttons">
+              <ul id="buttons-list">
+                <li>
+                  <button id="profileButton" onclick="location.href = 'profile';">Profile</button>
+                </li>
+                <li>
+                  <button id="logOffButton" onclick="location.href = 'logoff';">log out</button>
+                </li>
+              </ul>
+            </nav>
+          {% else %}
+            <nav id="header-buttons">
+              <ul id="buttons-list">
+                <li>
+                  <button id="loginButton" onclick="location.href = 'login';">Log In</button>
+                </li>
+                <li>
+                  <button id="signupButton" onclick="location.href = 'signup';">Sign Up</button>
+                </li>
+              </ul>
+            </nav>
+          {% endif %}
+      </div>
+    </header>
+
+    <div id="body-text">
+      <h1 style="text-align: center;">
+        The Running Wolverines Welcome You!
+      </h1>
+      <img src="../static/wolverine.gif" style="margin-left: 18.5%;">
+      
+      <div id="create-post">
+        <p>
+          write post
+        </p>
+      </div>
+
+      <!--Put a random post's information-->
+      <a href="https:\\www.facebook.com" style="color: inherit;">
+        <h2>
+          Main Post
+        </h2>
+      </a>
+
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sollicitudin, nunc condimentum condimentum pulvinar, ligula enim faucibus ligula, a malesuada mauris arcu volutpat lectus. Morbi non urna consequat, venenatis nisl eu, varius quam. Mauris mauris ex, pharetra id risus sed, pharetra fringilla sem. Etiam consectetur nisl magna, vel vestibulum tellus finibus sed. Integer tincidunt, risus fringilla pharetra eleifend, massa turpis accumsan tellus, vitae egestas arcu nisi ut nisl. Proin nibh lectus, vehicula sit amet maximus ut, rhoncus quis leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed sed cursus sem. Nulla facilisi. Phasellus in accumsan libero. Sed nec maximus dui. Mauris massa tellus, placerat sed lobortis et, pretium venenatis augue. Nam lacinia vitae nibh non pulvinar. Quisque vel risus pellentesque, mattis ligula eget, congue nisi. Quisque scelerisque sapien ornare, finibus enim eu, dictum dolor. Maecenas varius rutrum risus, rutrum scelerisque risus gravida quis.
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sollicitudin, nunc condimentum condimentum pulvinar, ligula enim faucibus ligula, a malesuada mauris arcu volutpat lectus. Morbi non urna consequat, venenatis nisl eu, varius quam. Mauris mauris ex, pharetra id risus sed, pharetra fringilla sem. Etiam consectetur nisl magna, vel vestibulum tellus finibus sed. Integer tincidunt, risus fringilla pharetra eleifend, massa turpis accumsan tellus, vitae egestas arcu nisi ut nisl. Proin nibh lectus, vehicula sit amet maximus ut, rhoncus quis leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed sed cursus sem. Nulla facilisi. Phasellus in accumsan libero. Sed nec maximus dui. Mauris massa tellus, placerat sed lobortis et, pretium venenatis augue. Nam lacinia vitae nibh non pulvinar. Quisque vel risus pellentesque, mattis ligula eget, congue nisi. Quisque scelerisque sapien ornare, finibus enim eu, dictum dolor. Maecenas varius rutrum risus, rutrum scelerisque risus gravida quis.
+
+  Sed neque quam, commodo ac lacus eu, lobortis imperdiet tortor. Nunc lacinia tincidunt ornare. Nullam semper, eros vel vehicula lobortis, turpis ex convallis quam, at ultricies purus nisi at est. Mauris non risus euismod, tincidunt nisl eu, eleifend leo. Sed vitae luctus est, vel tincidunt sem. Vivamus vel ipsum semper, sollicitudin risus ut, fringilla augue. Maecenas diam risus, sagittis id neque auctor, eleifend euismod felis. Etiam massa felis, blandit at turpis ut, pretium aliquam sapien. Curabitur vestibulum urna eu varius pharetra.
+
+  Mauris gravida pulvinar odio a mattis. In pharetra ipsum lectus, nec varius urna iaculis ut. Donec nec gravida purus. Nam sed libero orci. Nullam ut volutpat nulla. Morbi maximus eros lacus, non mollis eros consectetur lacinia. In posuere ultricies dui id volutpat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tincidunt ante volutpat diam aliquam placerat. Suspendisse potenti. Donec quis mattis massa. Aliquam erat volutpat. Nunc aliquam quam risus, eu sagittis quam malesuada nec. Proin consectetur dui eget mauris tempor posuere. Ut venenatis nulla eget ligula efficitur, nec sollicitudin sapien tincidunt. Nulla at cursus neque, scelerisque condimentum magna.
+
+  Aenean enim est, dignissim eu sagittis et, imperdiet vitae purus. Sed consequat felis sit amet nulla molestie tempus. Aenean mattis tellus ac ultrices eleifend. Cras rhoncus libero neque, eget tempus nulla vehicula vel. Phasellus et mollis orci. Sed eu tincidunt tellus, interdum tincidunt ligula. Pellentesque nulla arcu, tincidunt vel purus sit amet, condimentum dapibus erat. Mauris et neque turpis. Nam finibus ex at magna imperdiet tempor. Quisque molestie ex magna, eu eleifend ex tempus vel. Suspendisse porttitor aliquam mi nec ultricies. Ut eget accumsan nibh. Maecenas nec mauris nec ipsum lacinia tristique.
+
+  Phasellus malesuada orci dolor, sed fringilla mi ultricies at. Aliquam vel commodo odio. Duis ac volutpat tortor. Aliquam pellentesque non massa gravida aliquam. Sed sed erat quis mi congue tempus tincidunt id arcu. Vestibulum egestas dui nec magna volutpat ullamcorper. Duis lacinia turpis vel luctus accumsan. In id nunc eu urna sollicitudin mattis vitae eu massa. Nunc ullamcorper dui at elementum faucibus. Nunc pellentesque eu velit vitae egestas. Nullam tincidunt nisi sit amet tempus mattis. Curabitur cursus massa quis feugiat tristique. Maecenas vitae ante at mi sodales viverra id et felis. Morbi convallis dui eu ornare feugiat. Mauris iaculis lorem sit amet sapien dapibus, sit amet venenatis dolor pharetra. Nam dui ante, suscipit id egestas ac, pretium ac tortor.
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sollicitudin, nunc condimentum condimentum pulvinar, ligula enim faucibus ligula, a malesuada mauris arcu volutpat lectus. Morbi non urna consequat, venenatis nisl eu, varius quam. Mauris mauris ex, pharetra id risus sed, pharetra fringilla sem. Etiam consectetur nisl magna, vel vestibulum tellus finibus sed. Integer tincidunt, risus fringilla pharetra eleifend, massa turpis accumsan tellus, vitae egestas arcu nisi ut nisl. Proin nibh lectus, vehicula sit amet maximus ut, rhoncus quis leo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed sed cursus sem. Nulla facilisi. Phasellus in accumsan libero. Sed nec maximus dui. Mauris massa tellus, placerat sed lobortis et, pretium venenatis augue. Nam lacinia vitae nibh non pulvinar. Quisque vel risus pellentesque, mattis ligula eget, congue nisi. Quisque scelerisque sapien ornare, finibus enim eu, dictum dolor. Maecenas varius rutrum risus, rutrum scelerisque risus gravida quis.
+
+  Sed neque quam, commodo ac lacus eu, lobortis imperdiet tortor. Nunc lacinia tincidunt ornare. Nullam semper, eros vel vehicula lobortis, turpis ex convallis quam, at ultricies purus nisi at est. Mauris non risus euismod, tincidunt nisl eu, eleifend leo. Sed vitae luctus est, vel tincidunt sem. Vivamus vel ipsum semper, sollicitudin risus ut, fringilla augue. Maecenas diam risus, sagittis id neque auctor, eleifend euismod felis. Etiam massa felis, blandit at turpis ut, pretium aliquam sapien. Curabitur vestibulum urna eu varius pharetra.
+
+      </p>
+    </div>
+
+    <footer>
+      Copyright License 
+    </footer>
+  </body>
+
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Log In</title>
+    <link rel="icon" type="image/x-icon" href="../static/wolverine_icon.ico">
+    <link rel="stylesheet" href="../static/style.css">
+  </head>
+
+  <body>
+    <header id="topbar">
+        <div>
+          <a href="/">
+            <img id="logo" src="../static/topbar_logo.png">
+          </a>
+      
+          {% if current_user.is_authenticated %}
+            <nav id="header-buttons">
+              <ul id="buttons-list">
+                <li>
+                  <button id="profileButton" onclick="location.href = 'profile.html';">Profile</button>
+                </li>
+              </ul>
+            </nav>
+          {% else %}
+          <nav id="header-buttons">
+            <ul id="buttons-list">
+              <li>
+                <button id="loginButton" onclick="location.href = 'login';">Log In</button>
+              </li>
+              <li>
+                <button id="signupButton" onclick="location.href = 'signup';">Sign Up</button>
+              </li>
+            </ul>
+          </nav>
+          {% endif %}
+          
+        </div>
+      </header>
+
+      <div id="body-text">
+        <div id="question">
+            <h1>
+                Post Title
+            </h1>
+            <!--Put a Ask Question button to the right of the header-->
+
+            <p>
+                Post content
+            </p>
+        </div>
+
+        <div id="comments">
+        <h2>
+            comments
+        </h2>
+
+        <!--Repeat this block as many times as there are comments-->
+        <div id="comment">
+            <h4>
+                Comment title
+            </h4>
+
+            <p>
+                comment content
+            </p>
+        </div>
+        </div>
+      </div>
+      
+  </body>
+
+</html>

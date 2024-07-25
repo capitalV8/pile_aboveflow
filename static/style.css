@@ -1,0 +1,98 @@
+#logo{
+    width: 160px; 
+    height: 70px;
+    margin-left: 2%;
+    margin-top: 0.5%;
+}
+
+#topbar {
+    background-color: white;
+    height: 9%;
+    top: 0;
+    width: 110%;
+    padding-top: -5%;
+    margin-left: -1%;
+    position: fixed;
+    border-bottom: 3px solid purple;
+    }
+
+#header-topbar{
+    margin-left: 2%;
+    margin-top: 1%;
+}
+
+#header-buttons{
+    float: right;
+    margin-right: 12%;
+    margin-top: 1%;
+}
+
+button, #submit-button{
+    border: 0.1px solid grey;
+    transition-duration: 0.4s;
+    border-radius: 8px;
+    font-size: 17px;
+}
+
+button:hover {
+  color: orange;
+}
+
+#buttons-list li{
+    display: inline;
+    float: left;
+    padding-right: 12px;
+}
+
+#loginButton, #changePicture{
+    background-color: white;
+}
+
+#signupButton, #submit-button{
+    background-color: purple;
+}
+
+#submit-button:hover{
+    color: orange;
+}
+
+#body-text{
+    padding-top: 8%;
+    margin-left: 200px;
+    margin-right: 200px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+#login-box, #signup-box{
+    margin-top: 25%;
+    margin-left: 40%;
+    border: 1px solid purple;
+    border-radius: 8%;
+    width: fit-content;
+    height: fit-content;
+    padding: 1%;
+}
+
+#pass-reset-box{
+    margin-top: 25%;
+    margin-left: 38%;
+    border: 1px solid purple;
+    border-radius: 8%;
+    width: 310px;
+    padding: 1%;
+}
+
+#main-post:visited{
+    text-decoration: none;
+}
+
+#profile-picture{
+    margin-top: 20px;
+}
+
+#profile-info{
+    margin-left: 200px;
+    margin-top: -12%;
+}
+

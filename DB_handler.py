@@ -8,7 +8,7 @@ import psycopg2
 
 
 def connect():
-    DBconnection = psycopg2.connect("dbname='postgres' host='database' user='username' password='password' port='5432'")
+    DBconnection = psycopg2.connect("dbname='wolverine_overflow' host='database' user='username' password='password' port='5432'")
     DBcursor = DBconnection.cursor()
     return DBconnection, DBcursor
 
@@ -18,9 +18,9 @@ DBconnection, DBcursor = connect() # not good, should be in other file.
 
 
 def check_if_exists(table, column, val):
-    DBcursor.execute(f"""SELECT EXISTS(
-        SELECT 1 FROM {table} WHERE {column} = '{val}'
-         LIMIT 1);""")
+    DBcursor.execute("""SELECT EXISTS(
+        SELECT 1 FROM {} WHERE {} = '{}'
+         LIMIT 1);""".format(table, column, val))
     return DBcursor.fetchone()[0]
 
 def DBexec(query):
@@ -32,10 +32,10 @@ def DBselect(table, column):
     DBcursor.execute("SELECT {} FROM {};".format(column,table))
     return DBcursor.fetchone()
 
-def DBinsert(table, column, val):
-    DBcursor.execute("""INSERT INTO {} ({}) \
-                     VALUES('{}');
-                     """.format(table, column, val))
+def DBinsert(table, columns, vals):
+    DBcursor.execute("""INSERT INTO {}({})
+                     VALUES({});
+                     """.format(table, columns, vals))
 
 def DBnewtable(table_name):
     DBcursor.execute("CREATE TABLE {}();".format(table_name))
@@ -66,11 +66,29 @@ def create_default_table():
                         username VARCHAR(31),
                         password VARCHAR(31),
                         mail VARCHAR(127),
+                        id integer,
                         CONSTRAINT primaryk PRIMARY KEY (username)
                      );
                      """)
-    
+    DBconnection.commit()
+def create_posts_table():
+    DBcursor.execute("""
+    CREATE TABLE posts(
+        postid INT,
+        content TEXT 
+        
 
+
+
+    )
+        
+
+
+
+
+
+
+""")
 
 
 

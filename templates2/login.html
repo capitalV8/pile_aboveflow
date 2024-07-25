@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Log In</title>
+    <link rel="icon" type="image/x-icon" href="../static/wolverine_icon.ico">
+    <link rel="stylesheet" href="../static/style.css">
+  </head>
+
+  <body>
+    <header id="topbar">
+      <div>
+        <a href="/">
+          <img id="logo" src="../static/topbar_logo.png">
+        </a>
+      </div>
+    </header>
+    
+    <div id="login-box">
+      <h2>
+        Log In:
+      </h2>
+      <form method = "POST">
+        <label for="uname">Username:</label>
+        <input type="text" id="uname" name="uname"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="pass"><br><br>
+        <input id="submit-button" type="submit" value="Submit">
+      </form>
+    </div>
+    <div style="margin-left: 38%;">
+      <ul style="list-style-type: none; font-size: 14px;">
+        <li>
+          <a href="pass_reset">Forgot your password?</a>
+        </li>
+        <li>
+          <a href="signup">Don't have an account yet? Sign Up!</a>
+        </li>
+      </ul>
+    </div>
+
+  </body>
+</html>

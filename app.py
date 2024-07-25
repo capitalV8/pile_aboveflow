@@ -3,9 +3,11 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 import DB_handler
 
 
+#TODO make ID for table
+#TODO put DB_HANDLER.update wherever it is needed.
 DB_handler.connect()
-DB_handler.create_default_table()
-app=flask.Flask(__name__,template_folder='templates')
+#DB_handler.create_default_table()
+app=flask.Flask(__name__,template_folder='templates2', static_folder='static')
 
 # I need an actual secret key
 app.config["SECRET_KEY"] = b'f\xe9\x04\xc702\xc5\n\x83)\xe6\x1e1\xfe\x879\xc79a\xf6T\xce\x9a\xca'
@@ -15,7 +17,6 @@ login_manager.init_app(app)
 
 #defines the users class
 class Users(UserMixin):
-    id = 100
     username = "testusernameguy"
     password = "testpasswdyay"
     def __init__(self, uname, pword, ID):
@@ -45,13 +46,28 @@ login_manager.login_view = 'view_login'
 
 
 @app.route('/')
+@login_required
 def view_form():
-    return flask.render_template('test.html')
+    return flask.render_template('home.html')
 
 @app.route('/signup')
 def view_signup():
     return flask.render_template('signup.html')
 
+@app.route('/pass_reset')
+def view_pass_reset():
+    return flask.render_template('pass_reset.html')
+
+@app.route('/profile')
+def view_profile():
+    return flask.render_template('profile.html')
+
+
+
+@app.route('/logoff')
+def logoff():
+    logout_user()
+    return "logged off."
 
 
 userlist = []
@@ -60,19 +76,17 @@ userlist.append(Users("a","b", 100))
 def handle_thing():
     
     if flask.request.method == 'POST':
-        uname = flask.request.form['fname']
-        pword = flask.request.form['lname']
+        uname = flask.request.form['uname']
+        pword = flask.request.form['pass']
 
         if DB_handler.check_if_exists("users", "username", uname):
-            DB_handler.DBinsert(f"users, username, {uname}")        
-            DB_handler.DBinsert(f"users, password, {pword}")        
-            DB_handler.DBinsert("users, mail, mailthing@gmail.com") 
+            return "username already taken! please use another username."
         else:
-            return "failed."
-        
+            DB_handler.DBinsert("users", "username, password, mail, id", "'{}', '{}', 'mailthing@gmail.com', '100'".format(uname, pword))        
+            DB_handler.update()
+            return "you're signed up!."
         
 #        newuser = Users(uname, pword)
-
 @app.route('/login')
 def view_login():
     return flask.render_template('login.html')
@@ -84,20 +98,21 @@ def view_login():
 @app.route('/secret')
 @login_required
 def secret():
-    return flask.render_template('secret.html')
+    return flask.render_template('secret.html', listthing = ["a", "b", "c", "d", "e", "f"])
+
 
 @app.route('/login', methods=['POST'])
 #function for incoming post requests.
 def handle_post():
     if flask.request.method == 'POST':
-        uname = flask.request.form['fname']
-        pword = flask.request.form['lname']
+        uname = flask.request.form['uname']
+        pword = flask.request.form['pass']
         password = DB_handler.DBexec(f"""
-        SELECT password FROM users WHERE username = {uname} AND password = {pword}
+        SELECT password FROM users WHERE username = '{uname}' AND password = '{pword}';
         """)
         
         if password != None:
-            login_user(Users(uname, password))
+            login_user(Users(uname, password, 100))
             return(flask.redirect(flask.url_for('secret')))
         else:
             return(flask.redirect(flask.url_for('view_signup')))
