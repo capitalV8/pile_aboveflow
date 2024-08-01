@@ -23,10 +23,12 @@ def check_if_exists(table, column, val):
          LIMIT 1);""".format(table, column, val))
     return DBcursor.fetchone()[0]
 
-def DBexec(query):
-    DBcursor.execute(query)
-    return DBcursor.fetchone()
-
+def DBexec(query, vals):
+    DBcursor.execute(query, vals)
+    try:
+        return DBcursor.fetchone()
+    except:
+        return None
 
 def DBselect(table, column):
     DBcursor.execute("SELECT {} FROM {};".format(column,table))
@@ -34,8 +36,8 @@ def DBselect(table, column):
 
 def DBinsert(table, columns, vals):
     DBcursor.execute("""INSERT INTO {}({})
-                     VALUES({});
-                     """.format(table, columns, vals))
+                     VALUES(%s);
+                     """.format(table, columns), vals)
 
 def DBnewtable(table_name):
     DBcursor.execute("CREATE TABLE {}();".format(table_name))
@@ -48,6 +50,22 @@ def DBdrop_column(table_name, column_name):
 def DBnewcolumn(table_name, column_name, type):
     DBcursor.execute("""ALTER TABLE {}
                      ADD {} {}""".format(table_name, column_name, type))
+
+# TODO FIX THIS
+def get_short_posts():
+    DBcursor.execute("""
+                     SELECT title, content, user, id
+                     FROM 
+
+
+
+""")
+
+def get_comments(post):
+    DBcursor.execute("""SELECT comments.content, commentuser
+        FROM posts
+        INNER JOIN comments ON comments.commentid = posts.postid;
+""")
 
 
 
@@ -74,22 +92,32 @@ def create_default_table():
 def create_posts_table():
     DBcursor.execute("""
     CREATE TABLE posts(
-        postid INT,
-        content TEXT 
-        
+        postid UUID,
+        content TEXT,
+        title TEXT,
+        postuser VARCHAR(31),
+        CONSTRAINT postidpkey PRIMARY KEY (postid)
+    );
+    """)
+    DBconnection.commit()
 
+def create_comments_table():
+    DBcursor.execute("""
+    CREATE TABLE comments(
+        commentid UUID,
+        content TEXT,
+        commentuser VARCHAR(31),
+                     
+        CONSTRAINT postfkey
+            FOREIGN KEY(commentid)
+                REFERENCES posts(postid)
+    );
+                    """)
+    DBconnection.commit()
 
-
-    )
-        
-
-
-
-
-
-
-""")
-
+def init_tables():
+    print("shut up, bub!")
+    create_comments_table()
 
 
 
