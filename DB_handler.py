@@ -50,12 +50,12 @@ def DBdrop_column(table_name, column_name):
 def DBnewcolumn(table_name, column_name, type):
     DBcursor.execute("""ALTER TABLE {}
                      ADD {} {}""".format(table_name, column_name, type))
-
+#test
 # TODO FIX THIS
 def get_short_posts():
     DBcursor.execute("""
                      SELECT title, content, user, id
-                     FROM 
+                     FROM posts
 
 
 
@@ -117,6 +117,8 @@ def create_comments_table():
 
 def init_tables():
     print("shut up, bub!")
+    create_default_table()
+    create_posts_table()
     create_comments_table()
 
 
