@@ -1,140 +1,155 @@
-from flask import Flask, render_template, redirect, url_for
-from flask import request
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask import Flask, render_template, redirect, url_for, request
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import DB_handler
+from datetime import datetime
+from uuid import uuid4
 
+# DB_handler.init_tables()
+app = Flask(__name__, template_folder='templates2', static_folder='static')
 
-#TODO make ID for table
-#TODO put DB_HANDLER.update wherever it is needed.
-DB_handler.connect()
-#DB_handler.create_default_table()
-DB_handler.init_tables()
-app=Flask(__name__,template_folder='templates2', static_folder='static')
-
-# I need an actual secret key
 app.config["SECRET_KEY"] = b'f\xe9\x04\xc702\xc5\n\x83)\xe6\x1e1\xfe\x879\xc79a\xf6T\xce\x9a\xca'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'get_login'
 
-#defines the users class
+
 class Users(UserMixin):
     username = "testusernameguy"
     password = "testpasswdyay"
+
     def __init__(self, uname, pword, ID):
         self.username = uname
         self.password = pword
         self.id = ID
-    
 
 
+def create_post(content, username, title, ):
+    DB_handler.create_post(uuid4(), content, username, title, datetime.now())
 
-# gets users by id, i think? on connection? idk
+
+def create_comment(post_id, content, username, creation_time):
+    DB_handler.create_comment(
+        uuid4(), post_id, content, username, creation_time)
+
+
 @login_manager.user_loader
 def loader_user(user_id):
-#    return testuser
-    for user in userlist:
-        if user.get_id() == user_id:
-            return user
-    return "a"
+    return Users("a", "b", 1)
 
 
+@app.route('/posts')
+def get_posts(number):
+    return None
+    
+    return
 
-# defines login page i think
-login_manager.login_view = 'view_login'
 
+@app.route('/posts/<string:post_id>')
+def get_post(post_id):
+    title, content, user =  DB_handler.get_post(post_id)
+    comments = DB_handler.get_comments(post_id)
+    return render_template('post.html', title = title, post_content = content, username = user, 
+                           comments = comments, CONTENT = 0, USERNAME = 1)
+    post = DB_handler.get_post(post_id)
+    comments = DB_handler.get_comments(post_id)
 
 
 
 
 @app.route('/')
 @login_required
-def view_form():
+def get_home():
     return render_template('home.html')
 
+
 @app.route('/signup')
-def view_signup():
+def get_signup():
     return render_template('signup.html')
 
+
 @app.route('/pass_reset')
-def view_pass_reset():
+def get_pass_reset():
     return render_template('pass_reset.html')
 
+
 @app.route('/profile')
-def view_profile():
+def get_profile():
     return render_template('profile.html')
 
 
-
-@app.route('/logoff')
+@app.route('/logoff')  # TODO add frontend
 def logoff():
     logout_user()
     return "logged off."
 
 
-userlist = []
-userlist.append(Users("a","b", 100))
 @app.route('/signup', methods=['POST'])
-def handle_thing():
-    
+def handle_signup_post():
+
     if request.method == 'POST':
         uname = request.form['uname']
         pword = request.form['pass']
+        email = request.form['email']
+        retype_pword = request.form['rpass']
+        name = request.form['name']
 
         if DB_handler.check_if_exists("users", "username", uname):
             return "username already taken! please use another username."
         elif len(uname) > 30 or len(pword) > 30:
             return "username or password is too long!"
+        elif pword != retype_pword:
+            return "password not identical in both fields."
         else:
-            DB_handler.DBexec("INSERT INTO users(username, password, mail, id) VALUES (%s, %s, 'mailthing@gmail.com', '100')", (uname, pword))        
-            DB_handler.update()
+            DB_handler.DBexec(
+                "INSERT INTO users(username, password, mail, name, id) VALUES (%s, %s, %s, %s, %s)", (uname, pword, email, name, uuid4()))
             return "you're signed up!."
-        
-#        newuser = Users(uname, pword)
+
+
 @app.route('/login')
-def view_login():
+def get_login():
     return render_template('login.html')
-#DBinsert("hello", "col", "boooo")
-#DBconnection.commit()
-#DBselect("hello", "col")
 
 
 @app.route('/secret')
 @login_required
-def secret():
-    return render_template('secret.html', listthing = ["a", "b", "c", "d", "e", "f"])
+def get_secret():
+    post_list = [item for post in DB_handler.get_short_posts(
+        1) for item in post]
+    return render_template('secret.html', postlist=post_list)
+
+
+#create_comment('d43fbb15-9877-40c9-99fc-00f8b736a3b2', "stupid question", "commenter", datetime.now())
+#create_comment('d43fbb15-9877-40c9-99fc-00f8b736a3b2', "very stupid question", "commenter2", datetime.now())
 
 
 @app.route('/login', methods=['POST'])
-#function for incoming post requests.
-def handle_post():
+# function for incoming post requests.
+def handle_login_post():
     if request.method == 'POST':
         uname = request.form['uname']
         pword = request.form['pass']
-        password = DB_handler.DBexec(f"""
-        SELECT password FROM users WHERE username = %s AND password = %s;
-        """, (uname, pword))
-        
+        password, id = DB_handler.get_user(uname, pword)
+
         if password != None:
-            login_user(Users(uname, password, 100))
-            return(redirect(url_for('view_form')))
+            login_user(Users(uname, password, id))
+            return (redirect(url_for('get_home')))
         else:
-            return(redirect(url_for('view_signup')))
-
-
+            return (redirect(url_for('get_signup')))
 
             # SELECT password FROM users WHERE username = username
-            # AND 
-            
-            #return redirect(url_for("home"))
+            # AND
+
+            # return redirect(url_for("home"))
 
 #        DB_handler.DBinsert("hello, col, testeroftheages")
 
-        #return whatever is needed in the situation.
+        # return whatever is needed in the situation.
+
 
 @app.route('/')
 def handle_get():
-    return render_template(...) 
+    return render_template(...)
 
 
 if __name__ == '__main__':

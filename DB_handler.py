@@ -1,20 +1,19 @@
 import psycopg2
-
-
-#import docker
-#client = docker.DockerClient()
-#container = client.containers.get("wolverine_overflow-database-1")
-#IP = container.attrs['NetworkSettings']['IPAddress']
+from uuid import uuid4
+from datetime import datetime
+import psycopg2.extras
 
 
 def connect():
-    DBconnection = psycopg2.connect("dbname='wolverine_overflow' host='database' user='username' password='password' port='5432'")
+    DBconnection = psycopg2.connect(
+        "dbname='wolverine_overflow' host='database' user='username' password='password' port='5432'")
     DBcursor = DBconnection.cursor()
+    DBconnection.autocommit = True
     return DBconnection, DBcursor
 
-DBconnection, DBcursor = connect() # not good, should be in other file.
 
-
+DBconnection, DBcursor = connect()  # not good, should be in other file.
+psycopg2.extras.register_uuid()
 
 
 def check_if_exists(table, column, val):
@@ -23,6 +22,7 @@ def check_if_exists(table, column, val):
          LIMIT 1);""".format(table, column, val))
     return DBcursor.fetchone()[0]
 
+
 def DBexec(query, vals):
     DBcursor.execute(query, vals)
     try:
@@ -30,14 +30,17 @@ def DBexec(query, vals):
     except:
         return None
 
+
 def DBselect(table, column):
-    DBcursor.execute("SELECT {} FROM {};".format(column,table))
+    DBcursor.execute("SELECT {} FROM {};".format(column, table))
     return DBcursor.fetchone()
+
 
 def DBinsert(table, columns, vals):
     DBcursor.execute("""INSERT INTO {}({})
                      VALUES(%s);
                      """.format(table, columns), vals)
+
 
 def DBnewtable(table_name):
     DBcursor.execute("CREATE TABLE {}();".format(table_name))
@@ -47,31 +50,45 @@ def DBdrop_column(table_name, column_name):
     DBcursor.execute("""ALTER TABLE {}
                      DROP COLUMN {};""".format(table_name, column_name))
 
+
 def DBnewcolumn(table_name, column_name, type):
     DBcursor.execute("""ALTER TABLE {}
                      ADD {} {}""".format(table_name, column_name, type))
-#test
-# TODO FIX THIS
-def get_short_posts():
+    return DBcursor.fetchall()
+
+
+def get_user(username, password):
     DBcursor.execute("""
-                     SELECT title, content, user, id
-                     FROM posts
+        SELECT password, id FROM users WHERE username = %s AND password = %s;
+        """, (username, password))
+    return DBcursor.fetchall()[0]  # [0] means it returns only tuple of password, id.
 
 
+def get_short_posts(page_number):
+    DBcursor.execute(f"""
+                     SELECT title, postuser, LEFT(content, 50), creationtime
+                     FROM posts ORDER BY creationtime LIMIT 15 OFFSET {(page_number-1)*15}""")
+    return DBcursor.fetchall()
 
-""")
 
-def get_comments(post):
+def get_comments(post_id):
     DBcursor.execute("""SELECT comments.content, commentuser
         FROM posts
-        INNER JOIN comments ON comments.commentid = posts.postid;
-""")
+        INNER JOIN comments ON comments.postid = posts.postid;""")
+    return DBcursor.fetchall()
 
 
+def get_posts(page_number):
+    DBcursor.execute(
+        f"SELECT * FROM posts ORDER BY creationtime LIMIT 15 OFFSET {(page_number-1)*15}")
+    return DBcursor.fetchall()
 
 
-def update():
-    DBconnection.commit()
+def get_post(post_id):
+    DBcursor.execute(
+        "SELECT title, content, user FROM posts WHERE postid = %s", (post_id,))
+    return DBcursor.fetchone()
+
 
 def disconnect():
     DBcursor.close()
@@ -84,11 +101,14 @@ def create_default_table():
                         username VARCHAR(31),
                         password VARCHAR(31),
                         mail VARCHAR(127),
-                        id integer,
+                        name VARCHAR(31),
+                        id UUID,
+                        creationtime DATE,
                         CONSTRAINT primaryk PRIMARY KEY (username)
                      );
                      """)
-    DBconnection.commit()
+
+
 def create_posts_table():
     DBcursor.execute("""
     CREATE TABLE posts(
@@ -96,55 +116,48 @@ def create_posts_table():
         content TEXT,
         title TEXT,
         postuser VARCHAR(31),
-        CONSTRAINT postidpkey PRIMARY KEY (postid)
+        creationtime TIMESTAMP,
+        PRIMARY KEY (postid)
     );
     """)
-    DBconnection.commit()
+
+
+def create_post(post_id, content, username, title, creation_time):
+    DBcursor.execute("INSERT INTO posts(postid, content, postuser, title, creationtime) VALUES(%s, %s, %s, %s, %s)",
+                     (post_id, content, username, title, creation_time))
+
+
+def auto_create_post():
+    create_post(uuid4(), "this is a post", "Bobby",
+                "title for post", datetime.now())
+                
+
+
+def create_comment(comment_id, post_id, content, username, creation_time):
+    DBcursor.execute("INSERT INTO comments(commentid, postid, content, commentuser, creationtime) VALUES(%s, %s, %s, %s, %s)",
+                     (comment_id, post_id, content, username, creation_time))
+
 
 def create_comments_table():
     DBcursor.execute("""
     CREATE TABLE comments(
+        postid UUID,
         commentid UUID,
         content TEXT,
         commentuser VARCHAR(31),
-                     
+        creationtime TIMESTAMP,
         CONSTRAINT postfkey
-            FOREIGN KEY(commentid)
+            FOREIGN KEY(postid)
                 REFERENCES posts(postid)
     );
                     """)
-    DBconnection.commit()
+
 
 def init_tables():
     print("shut up, bub!")
-    create_default_table()
+    try:
+        create_default_table()
+    except:
+        pass
     create_posts_table()
     create_comments_table()
-
-
-
-
-
-
-
-
-
-#print(DBcursor.fetchall())
-#DBconnection.commit()
-
-
-#print(DBcursor.execute("SELECT * FROM thing"))
-
-#DBcursor.execute("""INSERT INTO thing(thingcolumn, thingcolumn2)
-#                 VALUES('hello', 'hello2');
-#                 """)
-
-
-#DBconnection = psycopg2.connect("dbname='new_testdb' user='dbuser' host='localhost' password='Bsmch@500K!'")
-
-
-#DBcursor.execute("""UPDATE thing
-#                 SET thingcolumn = 'hello';
-#                 
-#                 
-#                 """)

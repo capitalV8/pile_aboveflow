@@ -41,12 +41,15 @@
       <div id="body-text">
         <div id="question">
             <h1>
-                Post Title
+                {{title}}
             </h1>
             <!--Put a Ask Question button to the right of the header-->
+            <p>
+              {{username}}
+            </p>
 
             <p>
-                Post content
+                {{post_content}}
             </p>
         </div>
 
@@ -54,17 +57,19 @@
         <h2>
             comments
         </h2>
+        {% for comment in comments %}
+          <!--Repeat this block as many times as there are comments-->
+          <div id="comment">
+              <h4>
+                  test
+                  {{comment[USERNAME]}}
+              </h4>
 
-        <!--Repeat this block as many times as there are comments-->
-        <div id="comment">
-            <h4>
-                Comment title
-            </h4>
-
-            <p>
-                comment content
-            </p>
-        </div>
+              <p>
+                  {{comment[CONTENT]}}
+              </p>
+          </div>
+        {% endfor %}
         </div>
       </div>
       

@@ -43,9 +43,10 @@ login_manager.login_view = 'view_login'
 
 
 
-@app.route('/')
-def view_form():
-    return flask.render_template('home')
+@app.route('/<int:number>')
+def view_form(number):
+    return str(number)
+    return flask.render_template('home.html')
 
 @app.route("/../static/wolverine_icon.ico") # 2 add get for favicon
 def fav():
@@ -80,9 +81,8 @@ def view_login():
 
 
 @app.route('/secret')
-@login_required
 def secret():
-    return flask.render_template('secret')
+    return flask.render_template('secret.html', postlist = [("a", "b"), ("c", "d")])
 
 @app.route('/login', methods=['POST'])
 #function for incoming post requests.
