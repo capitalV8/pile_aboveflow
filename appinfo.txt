@@ -1,27 +1,5 @@
-postgres on docker does not work well with large scale projects. however, I think this is
-
-docker exec wolverine_overflow-web-1 bash -c "python3 app.py"
-
-
-things i downloaded (even those i am not using(not inclusive, probably forgot some stuff)):
-
-postgresql
-docker
-psycopg2 python library
-
-
-
-https://www.geeksforgeeks.org/how-to-add-authentication-to-your-app-with-flask-login/
-
-
-import docker
-
-client = docker.DockerClient()
-container = client.containers.get(container_id_or_name)
-ip_add = container.attrs['NetworkSettings']['IPAddress']
-print(ip_add)
-
-
-LINUX: psql postgresql://username:password@localhost:5433/postgres
-
-WINDOWS CMD: psql -h 10.35.64.79 -p 5433 -U username default_database
+things to be added:
+dynamic frontend using js or flask-socket - replaces all uneccesary refreshes/redirects.
+make code look better - either blueprints or imports.
+small security additions
+make pipeline - automatically setup server

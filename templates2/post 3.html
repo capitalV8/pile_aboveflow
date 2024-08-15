@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <!--[Title according to the post's id]-->
+    <title>Post Title</title>
+    <link rel="icon" type="image/x-icon" href="../static/wolverine_icon.ico">
+    <link rel="stylesheet" href="../static/style.css">
+    <script>
+      function upvote() {
+          if (document.getElementById('downvote-button').style.filter == "grayscale(100%)"){
+            document.getElementById('downvote-button').style.filter = "grayscale(0%)";
+          }
+
+          else{
+            document.getElementById('upvote-button').style.filter = "grayscale(0%)";
+            var current_votes = parseFloat(document.getElementById('vote-counter').innerText);
+            current_votes ++;
+            document.getElementById('vote-counter').innerText = current_votes;
+            document.getElementById('downvote-button').style.filter = "grayscale(100%)";
+          }
+      }
+
+      function downvote() {
+        if (document.getElementById('upvote-button').style.filter == "grayscale(100%)"){
+            document.getElementById('upvote-button').style.filter = "grayscale(0%)";
+          }
+        
+        else{
+          document.getElementById('downvote-button').style.filter = "grayscale(0%)";
+          var current_votes = parseFloat(document.getElementById('vote-counter').innerText);
+          current_votes --;
+          document.getElementById('vote-counter').innerText = current_votes;
+          document.getElementById('upvote-button').style.filter = "grayscale(100%)";
+        }
+      }
+
+    </script>
+  </head>
+
+  <body id="min-height-body"">
+    <header id="topbar">
+        <div>
+          <a href="home.html">
+            <img id="logo" src="../static/topbar_logo.png">
+          </a>
+
+          <!--[Take buttons in case the user is yes indeed very much logged in]-->
+          <nav id="header-buttons">
+            <ul id="buttons-list">
+              <li>
+                <button id="loginButton" onclick="location.href = 'login.html';">Log In</button>
+              </li>
+              <li>
+                <button id="signupButton" onclick="location.href = 'signup.html';">Sign Up</button>
+              </li>
+        
+
+            </ul>
+          </nav>
+          <!--[Put a profile button in case the user is logged in]-->
+          <nav id="header-buttons">
+            <ul id="buttons-list">
+              <li>
+                <button id="profileButton" onclick="location.href = 'profile.html';">Profile</button>
+              </li>
+              <li>
+                <button id="logoutButton" onclick="location.href = 'https://www.tumblr.com';">Log Out</button>
+              </li>
+            </ul>
+          </nav>
+          
+        </div>
+      </header>
+
+      <div id="body-text">
+        <div id="question">
+            <!--Post Title-->
+            <h1>
+              I don't like sand  
+            </h1>
+
+            <p>
+              I don't like sand. It's coarse
+			        and rough and irritating, and it
+			        gets everywhere. Not like here.
+			        Here everything's soft... and
+			        smooth...
+
+            </p>
+
+            <!--[Name of poster]-->
+            <div id="poster">
+              <h4>
+                Anakin Skywalker
+              </h4>
+
+              <!--[Info of poster]-->
+
+              <!--Reduce size of text below-->
+              <span style="display: block; margin-bottom: 0.5%;"></span>
+              <font size=""><p>Time as member: 5 years</p></font>
+              <span style="display: block; margin-bottom: 0.5%;"></span>
+              <p>Questions asked: 42</p>
+              <span style="display: block; margin-bottom: 0.5%;"></span>
+              <p>Answers given: 69</p>
+            </div>
+            
+
+            <div id="votes" name="like">
+
+              <form method="POST">
+                <input type="hidden" value="like" name="like" />
+                <input type="image" name="like" id="upvote-button" src="../static/upvote.png" border="0">
+                <h1 id="vote-counter" name="like">
+                  0
+                </h1>
+              </form>
+            </div>
+
+
+            <div id="votes" name="dislike">
+
+              <form method="POST">
+                <input type="hidden" value="dislike" name="like" />
+                <input type="image" name="dilike" id="upvote-button" src="../static/upvote.png" border="0">
+                <h1 id="vote-counter" name="like">
+                  0
+                </h1>
+              </form>
+            </div>
+
+
+            <!--Time when posted-->
+        </div>
+
+        <div id="write-answer">
+          <h2 style="margin-top: 1%; margin-left: 1%;">
+            Answer Question
+          </h2>
+          <form method="POST">
+            <textarea id="question" rows="15" cols="100"></textarea>
+            <input id="postButton" type="submit" value="Post">
+          </form>
+        </div>
+
+        <div id="comments">
+          <h2>
+              Answers
+          </h2>
+
+        <!--[Load all comments]-->
+          <div id="comment">
+              <!--[Comment title according to its ID]-->
+              <h4>
+                  It's over, Anakin
+              </h4>
+
+              <!--[Load the comment's content according ]-->
+              <p>
+                  I have the high ground.
+              </p>
+
+              <!--Picture of commenter-->
+              <!--[Name of commenter]-->
+              <h5>
+                Obi Wan Kenobi
+              </h5>
+
+              <!--[Info of commenter]-->
+              <!--Reduce size of text below-->
+              <span id="detail-separator"></span>
+              <p id="detail">Time as member: 5 years</p>
+              <span id="detail-separator"></span>
+              <p id="detail">Questions asked: 42</p>
+              <span id="detail-separator"></span>
+              <p id="detail">Answers given: 69</p>
+              <p id="comment-id">1</p>
+          </div>
+        </div>
+      </div>
+    <footer id="footer">
+      <p style="margin-left: 1%;">
+        Copyright License &copy;
+      </p>
+      <p style="margin-left: 1%;">
+        By Tal Habibi and David Merzel
+      </p>
+    </footer>
+  </body>
+
+</html>

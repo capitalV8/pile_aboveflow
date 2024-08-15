@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Wolverine Aboveflow</title>
+    <link rel="icon" type="image/x-icon" href="../static/wolverine_icon.ico">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+  </head>
+
+  <body id="min-height-body">
+    <header id="topbar">
+      <div>
+        <a href="home.html">
+          <img id="logo" style="margin-left: 2;" src="../static/topbar_logo.png">
+        </a>
+
+          <!--[Take buttons in case the user is yes indeed very much logged in]-->
+        <nav id="header-buttons">
+          <ul id="buttons-list">
+            <li>
+              <button id="loginButton" onclick="location.href = 'login.html';">Log In</button>
+            </li>
+            <li>
+              <button id="signupButton" onclick="location.href = 'signup.html';">Sign Up</button>
+            </li>
+          </ul>
+        </nav>
+        <nav id="header-buttons">
+          <ul id="buttons-list">
+            <li>
+              <button id="profileButton" onclick="location.href = 'profile.html';">Profile</button>
+            </li>
+            <li>
+              <button id="logoutButton" onclick="window.alert('You have been logged out');">Log Out</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div id="body-text">
+      <h1 style="text-align: center;">
+        The Running Wolverines Welcome You!
+      </h1>
+      <img src="../static/wolverine.gif" style="margin-left: 18.5%;">
+      
+      <!--Make post-->
+      <div id="create-post">
+        <h2 style="margin-top: 1%; margin-left: 1%;">
+          Ask a Question
+        </h2>
+        <form method="POST">
+          <textarea id="question" rows="15" cols="100", name="post content"></textarea>
+          <input id="postButton" type="submit" value="Post">
+        </form>
+      </div>
+
+      <!--[Load the posts shortly]-->
+      {% for post in posts %}
+      <div id="post">
+        <div style="margin-bottom: 4%;">
+          <a href="post.html" style="color: inherit;">
+            <h3>
+              {{shortpost[TITLE]}}
+            </h3>
+          </a>
+        </div>
+        <div>
+          <p>
+            {{shortpost[CONTENT]}}
+          </p>
+        </div>
+        <span style="display: block; margin-bottom: 5%;"></span>
+        <div>
+          <h5 style="margin-bottom: -1%;">{{shortpost[USERNAME]}}</h5>
+          <h5>{{shortpost[DATE]}}</h5>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <footer>
+      <p style="margin-left: 1%;">
+        Copyright License &copy;
+      </p>
+      <p style="margin-left: 1%;">
+        By Tal Habibi and David Merzel
+      </p>
+    </footer>
+  </body>
+
+</html>

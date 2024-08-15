@@ -43,10 +43,9 @@ login_manager.login_view = 'view_login'
 
 
 
-@app.route('/<int:number>')
-def view_form(number):
-    return str(number)
-    return flask.render_template('home.html')
+@app.route('/')
+def view_form():
+    return flask.render_template('test.html')
 
 @app.route("/../static/wolverine_icon.ico") # 2 add get for favicon
 def fav():
@@ -80,6 +79,32 @@ def view_login():
 #DBselect("hello", "col")
 
 
+@app.route('/update')
+def update():
+    return "bob"
+
+
+@app.route('/post')
+def get_post():
+    return flask.render_template('post 3.html')
+
+
+
+@app.route('/post', methods=['POST']) #TODO: connect with html
+def post_post():
+    is_like = flask.request.form['like']
+
+    print(is_like)
+    #isnt_like = flask.request.form['dislike']
+    print(is_like)
+    #print(isnt_like)
+    return is_like
+
+
+@app.route('/update2')
+def update2():
+    return "bob2"
+
 @app.route('/secret')
 def secret():
     return flask.render_template('secret.html', postlist = [("a", "b"), ("c", "d")])
@@ -112,4 +137,4 @@ def handle_post():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=False)
+    app.run(host='0.0.0.0', port=5001, debug=True)

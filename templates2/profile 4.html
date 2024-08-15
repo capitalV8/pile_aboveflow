@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
   </head>
 
-  <body>
+  <body id="min-height-body">
     <header id="topbar">
       <div>
         <a href="home.html">
@@ -17,7 +17,7 @@
         <nav id="header-buttons">
           <ul id="buttons-list">
             <li>
-              <button id="logoutButton" onclick="location.href = 'https://www.tumblr.com';">Log Out</button>
+              <button id="logoutButton" onclick="window.alert('You have been logged out');">Log Out</button>
             </li>
           </ul>
         </nav>
@@ -30,7 +30,7 @@
             <img style="border-radius: 50%; height: 110px; width: 112px;" src="images/profile_pic.jpg">
             <ul style="margin-left: -6%;" id="buttons-list">
                 <li>
-                    <button id="changePicture" onclick="location.href = 'https:\\www.tumblr.com';">Change Picture</button>
+                    <button id="changePicture" onclick="window.alert('Your picture has been changed');">Change Picture</button>
                 </li>
             </ul>  
         </div>
@@ -54,16 +54,48 @@
             </p>
 
             <!--{Get make post <div> from home.html}-->
-            <p>
-                make post
-            </p>
+            <div id="create-post">
+              <h2 style="margin-top: 1%; margin-left: 1%;">
+                Ask a Question
+              </h2>
+              <form method="POST">
+                <textarea id="question" rows="15" cols="75"></textarea>
+                <input id="postButton" type="submit" value="Post">
+              </form>
+            </div>
 
             <!--[Load all posts shortly]-->
-            <h2 style="margin-top: 10%;">
-                Posts 
-            </h2>
-        </div>
-    </div>
+            {% for post in posts %}
+            <div>
+              <div style="margin-bottom: 4%;">
+                <a href="post.html" style="color: inherit;">
+                  <h3>
+                    {{shortpost[TITLE]}}
+                  </h3>
+                </a>
+              </div>
+              <div>
+                <p>
+                  {{shortpost[CONTENT]}}
+                </p>
+              </div>
+              <span style="display: block; margin-bottom: 5%;"></span>
+              <div>
+                <h5 style="margin-bottom: -1%;">{{shortpost[USERNAME]}}</h5>
+                <h5>{{shortpost[DATE]}}</h5>
+              </div>
+            </div>
+            {% endfor %}
+              </div>
+          </div>
+    <footer id="footer">
+      <p style="margin-left: 1%;">
+        Copyright License &copy;
+      </p>
+      <p style="margin-left: 1%;">
+        By Tal Habibi and David Merzel
+      </p>
+    </footer>
   </body>
 
 </html>

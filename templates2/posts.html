@@ -7,8 +7,11 @@
 
 <h1>WOAH THIS IS SECRET!!!</h1>
 <p>hello there.</p>
-{% for shortpost in postlist %}
-    <div>{{shortpost}}</div>
+{% for post in posts %}
+    <div>{{shortpost[TITLE]}}</div>
+    <div>{{shortpost[USERNAME]}}</div>
+    <div>{{shortpost[CONTENT]}}</div>
+    <div>{{shortpost[DATE]}}</div>
 {% endfor %}
 <form method = "POST">
 <label for="fname">username:</label>

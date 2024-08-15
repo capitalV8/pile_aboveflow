@@ -4,7 +4,10 @@ import DB_handler
 from datetime import datetime
 from uuid import uuid4
 
-# DB_handler.init_tables()
+# TODO: use aborts instead of returning weird stuff 
+# TODO: check if user inputs is valid on client side.
+
+DB_handler.init_tables()
 app = Flask(__name__, template_folder='templates2', static_folder='static')
 
 app.config["SECRET_KEY"] = b'f\xe9\x04\xc702\xc5\n\x83)\xe6\x1e1\xfe\x879\xc79a\xf6T\xce\x9a\xca'
@@ -35,14 +38,26 @@ def create_comment(post_id, content, username, creation_time):
 
 @login_manager.user_loader
 def loader_user(user_id):
-    return Users("a", "b", 1)
+    uname = DB_handler.get_user_by_id(user_id)[0]
+    return Users(uname, "b" , user_id) # TODO: this
 
 
-@app.route('/posts')
-def get_posts(number):
-    return None
-    
-    return
+@app.route('/posts/<string:page_number>') #TODO: this
+def get_posts(page_number):
+    if len(page_number) > 5: # This means that the request is for a specific post, not multiple posts. TODO: better implementation?
+        title, content, user =  DB_handler.get_post(page_number)
+        comments = DB_handler.get_comments(page_number)
+        likes = DB_handler.get_likes_post(page_number)[0]
+        return render_template('post 3.html', title = title, post_content = content, username = user, likes_number = likes,
+                           comments = comments, CONTENT = 0, USERNAME = 1)
+    # Code from here on is for getting a page of posts.
+    try:
+        posts = DB_handler.get_short_posts(page_number)
+    except:
+        return "invalid url!"
+    return render_template(posts = posts, TITLE = 0, USERNAME = 1, CONTENT = 2, DATE = 3)
+
+
 
 
 @app.route('/posts/<string:post_id>')
@@ -51,8 +66,24 @@ def get_post(post_id):
     comments = DB_handler.get_comments(post_id)
     return render_template('post.html', title = title, post_content = content, username = user, 
                            comments = comments, CONTENT = 0, USERNAME = 1)
-    post = DB_handler.get_post(post_id)
-    comments = DB_handler.get_comments(post_id)
+
+
+@app.route('/posts/<string:post_id>', methods=['POST']) #TODO: connect with html
+def post_post(post_id):
+    is_like = request.form['like']
+    isnt_like = request.form['dislike']
+    print(is_like)
+    print(isnt_like)
+    comment_id = request.form['comment_id']
+    if is_like == "yes": #TODO: lambda this
+        is_like = True
+    else:
+        is_like = False
+    if comment_id == "0":
+        DB_handler.alter_like_post(post_id, is_like, current_user.username)
+    else:
+        DB_handler.alter_like_comment(comment_id, is_like, current_user.username)
+
 
 
 
@@ -61,6 +92,18 @@ def get_post(post_id):
 @login_required
 def get_home():
     return render_template('home.html')
+
+@app.route('/home')
+@login_required
+def get_home2():
+    return render_template('home 3.html')
+
+@app.route('/home', methods=['POST'])
+@login_required
+def post_home2():
+    post_content = request.form["post content"]
+    DB_handler.create_post(uuid4(), post_content, current_user.username,  "title", datetime.now())
+    return render_template('home 3.html')
 
 
 @app.route('/signup')
@@ -77,11 +120,17 @@ def get_pass_reset():
 def get_profile():
     return render_template('profile.html')
 
+@app.route('/profile/<string:user_id>') #TODO: this, add bio?
+def get_user_profile(user_id):
+    user = DB_handler.get_user_by_id(user_id)
+    return render_template('profile.html', username = user[0], firstname = user[1], lastname = user[2])
+
 
 @app.route('/logoff')  # TODO add frontend
 def logoff():
     logout_user()
-    return "logged off."
+    return (redirect(url_for('get_home')))
+
 
 
 @app.route('/signup', methods=['POST'])
@@ -102,9 +151,8 @@ def handle_signup_post():
             return "password not identical in both fields."
         else:
             DB_handler.DBexec(
-                "INSERT INTO users(username, password, mail, name, id) VALUES (%s, %s, %s, %s, %s)", (uname, pword, email, name, uuid4()))
+                "INSERT INTO users(username, password, mail, name, id, creationtime) VALUES (%s, %s, %s, %s, %s, %s)", (uname, pword, email, name, uuid4(), datetime.now()))
             return "you're signed up!."
-
 
 @app.route('/login')
 def get_login():
@@ -116,7 +164,7 @@ def get_login():
 def get_secret():
     post_list = [item for post in DB_handler.get_short_posts(
         1) for item in post]
-    return render_template('secret.html', postlist=post_list)
+    return render_template('secret.html', postlist=post_list, username=current_user.username)
 
 
 #create_comment('d43fbb15-9877-40c9-99fc-00f8b736a3b2', "stupid question", "commenter", datetime.now())
@@ -129,7 +177,10 @@ def handle_login_post():
     if request.method == 'POST':
         uname = request.form['uname']
         pword = request.form['pass']
-        password, id = DB_handler.get_user(uname, pword)
+        try:
+            password, id = DB_handler.get_user(uname, pword)
+        except:
+            return "incorrect username or password!"
 
         if password != None:
             login_user(Users(uname, password, id))
