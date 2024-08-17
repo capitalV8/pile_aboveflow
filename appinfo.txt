@@ -3,3 +3,5 @@ dynamic frontend using js or flask-socket - replaces all uneccesary refreshes/re
 make code look better - either blueprints or imports.
 small security additions
 make pipeline - automatically setup server
+implement changing likes/dislikes.
+have all query valuue select order go by same logic.

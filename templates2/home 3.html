@@ -10,31 +10,35 @@
   <body id="min-height-body">
     <header id="topbar">
       <div>
-        <a href="home.html">
+        <a href="/">
           <img id="logo" style="margin-left: 2;" src="../static/topbar_logo.png">
         </a>
 
           <!--[Take buttons in case the user is yes indeed very much logged in]-->
+        {% if current_user.is_authenticated %}
         <nav id="header-buttons">
           <ul id="buttons-list">
             <li>
-              <button id="loginButton" onclick="location.href = 'login.html';">Log In</button>
-            </li>
-            <li>
-              <button id="signupButton" onclick="location.href = 'signup.html';">Sign Up</button>
-            </li>
-          </ul>
-        </nav>
-        <nav id="header-buttons">
-          <ul id="buttons-list">
-            <li>
-              <button id="profileButton" onclick="location.href = 'profile.html';">Profile</button>
+              <button id="profileButton" onclick="location.href = '/profile';">Profile</button>
             </li>
             <li>
               <button id="logoutButton" onclick="window.alert('You have been logged out');">Log Out</button>
             </li>
           </ul>
         </nav>
+        {% else %}
+        <nav id="header-buttons">
+          <ul id="buttons-list">
+            <li>
+              <button id="loginButton" onclick="location.href = '/login';">Log In</button>
+            </li>
+            <li>
+              <button id="signupButton" onclick="location.href = '/signup';">Sign Up</button>
+            </li>
+          </ul>
+        </nav>
+        {% endif %}
+
       </div>
     </header>
 
@@ -50,25 +54,32 @@
           Ask a Question
         </h2>
         <form method="POST">
+          <h3>Title: </h3>
+          <textarea id="question" rows="1" cols="100", name="post title"></textarea>
+
           <textarea id="question" rows="15" cols="100", name="post content"></textarea>
           <input id="postButton" type="submit" value="Post">
         </form>
       </div>
 
       <!--[Load the posts shortly]-->
-      {% for post in posts %}
+      {% for shortpost in posts %}
       <div id="post">
         <div style="margin-bottom: 4%;">
-          <a href="post.html" style="color: inherit;">
+          <a href="" id="{{shortpost[ID]}}" style="color: inherit;">
             <h3>
               {{shortpost[TITLE]}}
             </h3>
           </a>
+          <script>var post_link = document.getElementById("{{shortpost[ID]}}")
+            post_link.setAttribute("href", "posts/{{shortpost[ID]}}")
+        </script>
+        
         </div>
         <div>
-          <p>
+          <pre>
             {{shortpost[CONTENT]}}
-          </p>
+          </pre>
         </div>
         <span style="display: block; margin-bottom: 5%;"></span>
         <div>

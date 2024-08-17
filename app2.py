@@ -1,5 +1,5 @@
 import flask
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 #import DB_handler
 #DB_handler.connect()
 
@@ -29,11 +29,7 @@ class Users(UserMixin):
 @login_manager.user_loader
 def loader_user(user_id):
 #    return testuser
-    for user in userlist:
-        if user.get_id() == user_id:
-            return user
-    return "a"
-
+    return userlist[0]
 
 
 # defines login page i think
@@ -45,7 +41,7 @@ login_manager.login_view = 'view_login'
 
 @app.route('/')
 def view_form():
-    return flask.render_template('test.html')
+    return flask.render_template('home.html')
 
 @app.route("/../static/wolverine_icon.ico") # 2 add get for favicon
 def fav():
@@ -55,25 +51,24 @@ def fav():
 
 @app.route('/signup')
 def view_signup():
-    return flask.render_template('signup')
+    return flask.render_template('signup.html')
 
 
 
 userlist = []
-userlist.append(Users("a","b", 100))
+userlist.append(Users("usernameeeeeeeee","passgassas", 100))
 @app.route('/signup', methods=['POST'])
 def handle_thing():
     if flask.request.method == 'POST':
-        uname = flask.request.form['uname']
-        pword = flask.request.form['pass']
-        newuser = Users(uname, pword)
-        userlist.append(newuser)
-
-        return "ok"
+            uname = flask.request.args.get("uname", default=None)
+            if not uname == None:
+                return "that exists"
+            else:
+                return "does not exist"
 
 @app.route('/login')
 def view_login():
-    return flask.render_template('login')
+    return flask.render_template('login.html')
 #DBinsert("hello", "col", "boooo")
 #DBconnection.commit()
 #DBselect("hello", "col")
@@ -105,9 +100,17 @@ def post_post():
 def update2():
     return "bob2"
 
-@app.route('/secret')
+@app.route('/secret', methods=['POST'])
+def post_secret():
+    thing = flask.request.form["post content"]
+    return flask.render_template('secre2.html', post_content = thing)
+
+
+
+@app.route('/secret',)
 def secret():
-    return flask.render_template('secret.html', postlist = [("a", "b"), ("c", "d")])
+    return flask.render_template('secret.html', postlist = [("1", "2"), ("3", "4")])
+
 
 @app.route('/login', methods=['POST'])
 #function for incoming post requests.
@@ -138,3 +141,4 @@ def handle_post():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
+login_user(userlist[0])

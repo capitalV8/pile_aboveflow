@@ -18,8 +18,10 @@ login_manager.login_view = 'get_login'
 
 
 class Users(UserMixin):
-    username = "testusernameguy"
-    password = "testpasswdyay"
+
+    def get_username(self): #TODO: i dont think this is neccesary.
+        return self.username
+
 
     def __init__(self, uname, pword, ID):
         self.username = uname
@@ -45,44 +47,48 @@ def loader_user(user_id):
 @app.route('/posts/<string:page_number>') #TODO: this
 def get_posts(page_number):
     if len(page_number) > 5: # This means that the request is for a specific post, not multiple posts. TODO: better implementation?
-        title, content, user =  DB_handler.get_post(page_number)
+        title, content, user, creation_time =  DB_handler.get_post(page_number)
         comments = DB_handler.get_comments(page_number)
         likes = DB_handler.get_likes_post(page_number)[0]
-        return render_template('post 3.html', title = title, post_content = content, username = user, likes_number = likes,
-                           comments = comments, CONTENT = 0, USERNAME = 1)
+        return render_template('post 3.html', title = title, post_content = content, username = user, creation_time = creation_time, likes = likes,
+                           comments = comments, CONTENT = 0, USERNAME = 1, CREATION_TIME = 2, ID = 3, LIKES = 4)
     # Code from here on is for getting a page of posts.
     try:
         posts = DB_handler.get_short_posts(page_number)
     except:
         return "invalid url!"
-    return render_template(posts = posts, TITLE = 0, USERNAME = 1, CONTENT = 2, DATE = 3)
+    return render_template('posts.html', posts = posts, TITLE = 0, USERNAME = 1, CONTENT = 2, DATE = 3, ID = 4)
 
 
 
 
-@app.route('/posts/<string:post_id>')
-def get_post(post_id):
-    title, content, user =  DB_handler.get_post(post_id)
-    comments = DB_handler.get_comments(post_id)
-    return render_template('post.html', title = title, post_content = content, username = user, 
-                           comments = comments, CONTENT = 0, USERNAME = 1)
 
 
 @app.route('/posts/<string:post_id>', methods=['POST']) #TODO: connect with html
 def post_post(post_id):
-    is_like = request.form['like']
-    isnt_like = request.form['dislike']
-    print(is_like)
-    print(isnt_like)
-    comment_id = request.form['comment_id']
-    if is_like == "yes": #TODO: lambda this
-        is_like = True
+
+
+    if "answer" in request.form.keys():
+        reply = request.form['answer']
+        DB_handler.create_comment(uuid4(), post_id, reply, current_user.username, datetime.now())
     else:
-        is_like = False
-    if comment_id == "0":
-        DB_handler.alter_like_post(post_id, is_like, current_user.username)
-    else:
-        DB_handler.alter_like_comment(comment_id, is_like, current_user.username)
+        is_like = request.form['like']
+        print(is_like)
+        try:
+            username = current_user.username
+        except:
+            return "log in to like posts!"
+        comment_id = request.form['comment_id']
+        if is_like == "like": #TODO: lambda this
+            is_like = True
+        else:
+            is_like = False
+        if comment_id == "0":
+            DB_handler.alter_like_post(post_id, is_like, username)
+        else:
+            DB_handler.alter_like_comment(comment_id, is_like, username)
+        return "success"
+    return "success2"
 
 
 
@@ -91,19 +97,21 @@ def post_post(post_id):
 @app.route('/')
 @login_required
 def get_home():
-    return render_template('home.html')
+    posts = DB_handler.get_short_posts(1)
+    return render_template('home 3.html', posts=posts, TITLE = 0, USERNAME = 1, CONTENT = 2, DATE = 3, ID = 4)
 
 @app.route('/home')
 @login_required
 def get_home2():
-    return render_template('home 3.html')
+    return render_template('home 3.html', )
 
-@app.route('/home', methods=['POST'])
+@app.route('/', methods=['POST'])
 @login_required
-def post_home2():
+def post_home():
     post_content = request.form["post content"]
-    DB_handler.create_post(uuid4(), post_content, current_user.username,  "title", datetime.now())
-    return render_template('home 3.html')
+    post_title = request.form["post title"]
+    DB_handler.create_post(uuid4(), post_content, current_user.username, post_title, datetime.now())
+    return "Uploaded question!"
 
 
 @app.route('/signup')
@@ -198,9 +206,9 @@ def handle_login_post():
         # return whatever is needed in the situation.
 
 
-@app.route('/')
-def handle_get():
-    return render_template(...)
+#@app.route('/')
+#def handle_get():
+#    return render_template(...)
 
 
 if __name__ == '__main__':

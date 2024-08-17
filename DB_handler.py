@@ -72,28 +72,28 @@ def get_user_by_id(id):
 
 def get_short_posts(page_number):
     DBcursor.execute(f"""
-                     SELECT title, postuser, LEFT(content, 50), creationtime
-                     FROM posts ORDER BY creationtime LIMIT 15 OFFSET {(page_number-1)*15}""")
+                     SELECT title, postuser, LEFT(content, 50), creationtime, postid
+                     FROM posts ORDER BY creationtime LIMIT 15 OFFSET {int((int(page_number)-1)*15)};""")
     return DBcursor.fetchall()
 
 
 def get_comments(post_id):
-    DBcursor.execute("""SELECT comments.content, commentuser
+    DBcursor.execute("""SELECT DISTINCT comments.content, commentuser, comments.creationtime, commentid, comments.likes
         FROM posts
-        INNER JOIN comments ON comments.postid = posts.postid;""")
+        INNER JOIN comments ON comments.postid = %s;""", (post_id,))
     return DBcursor.fetchall()
 
 
 
 def get_posts(page_number):
     DBcursor.execute(
-        f"SELECT * FROM posts ORDER BY creationtime LIMIT 15 OFFSET {(page_number-1)*15}")
+        f"SELECT * FROM posts ORDER BY creationtime LIMIT 15 OFFSET {(page_number-1)*15};")
     return DBcursor.fetchall()
 
 
 def get_post(post_id):
     DBcursor.execute(
-        "SELECT title, content, user FROM posts WHERE postid = %s", (post_id,))
+        "SELECT title, content, postuser, creationtime FROM posts WHERE postid = %s", (post_id,))
     return DBcursor.fetchone()
 
 
@@ -121,18 +121,22 @@ def create_default_table():
 
 def alter_like_comment(comment_id, add_like, user): # TODO: can this and add_like_post be done in one?
     """ If add_like is True, adds a like, reduces if False. """
-    action = lambda num: "+ 1 " if add_like else "- 1"
-    if check_user_liked_comments(user):
-        DBcursor.execute("UPDATE comments SET likes = likes %s, users_liked = array_append(users_liked, %s) WHERE commentid = %s", (action, user, comment_id))
+
+    if add_like:
+        action = "+ 1"
+    else:
+        action = "- 1"
+    if not check_user_liked_comments(user, comment_id):
+        DBcursor.execute(f"UPDATE comments SET likes = likes {action}, users_liked = array_append(users_liked, %s) WHERE commentid = %s", (user, comment_id))
 
 
-def check_user_liked(user):
-    DBcursor.execute("""SELECT EXISTS (SELECT 1 FROM posts WHERE users_liked @> ARRAY[%s]::varchar[]);""", user)
+def check_user_liked(user, post_id):
+    DBcursor.execute("""SELECT EXISTS (SELECT 1 FROM posts WHERE posts.postid = %s AND users_liked @> ARRAY[%s]::varchar[]);""", (post_id, user))
     return DBcursor.fetchone()[0]
 
 
-def check_user_liked_comments(user):
-    DBcursor.execute("""SELECT EXISTS (SELECT 1 FROM posts WHERE users_liked @> ARRAY[%s]::varchar[]);""", user)
+def check_user_liked_comments(user, comment_id):
+    DBcursor.execute("""SELECT EXISTS (SELECT 1 FROM comments WHERE comments.commentid = %s AND users_liked @> ARRAY[%s]::varchar[]);""", (comment_id, user))
     return DBcursor.fetchone()[0]
 
 
@@ -140,9 +144,12 @@ def check_user_liked_comments(user):
 def alter_like_post(post_id, add_like, user):
     """ If add_like is True, adds a like, reduces if False. """
 
-    action = lambda num: "+ 1 " if add_like else "- 1"
-    if check_user_liked(user):
-        DBcursor.execute("UPDATE posts SET likes = likes %s, users_liked = array_append(users_liked, %s) WHERE postid = %s", (action, user, post_id))
+    if add_like:
+        action = "+ 1"
+    else:
+        action = "- 1"
+    if not check_user_liked(user, post_id):
+        DBcursor.execute(f"UPDATE posts SET likes = likes {action}, users_liked = array_append(users_liked, %s) WHERE postid = %s", (user, post_id))
 
 
 def create_posts_table():
@@ -183,7 +190,7 @@ def auto_create_post():
 
 
 def create_comment(comment_id, post_id, content, username, creation_time):
-    DBcursor.execute("INSERT INTO comments(commentid, postid, content, commentuser, creationtime, likes) VALUES(%s, %s, %s, %s, %s, 0)",
+    DBcursor.execute("INSERT INTO comments(commentid, postid, content, commentuser, creationtime, likes, users_liked) VALUES(%s, %s, %s, %s, %s, 0, '{}')",
                      (comment_id, post_id, content, username, creation_time))
 
 

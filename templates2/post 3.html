@@ -41,7 +41,7 @@
   <body id="min-height-body"">
     <header id="topbar">
         <div>
-          <a href="home.html">
+          <a href="/">
             <img id="logo" src="../static/topbar_logo.png">
           </a>
 
@@ -49,10 +49,10 @@
           <nav id="header-buttons">
             <ul id="buttons-list">
               <li>
-                <button id="loginButton" onclick="location.href = 'login.html';">Log In</button>
+                <button id="loginButton" onclick="location.href = '/login';">Log In</button>
               </li>
               <li>
-                <button id="signupButton" onclick="location.href = 'signup.html';">Sign Up</button>
+                <button id="signupButton" onclick="location.href = '/signup';">Sign Up</button>
               </li>
         
 
@@ -62,7 +62,7 @@
           <nav id="header-buttons">
             <ul id="buttons-list">
               <li>
-                <button id="profileButton" onclick="location.href = 'profile.html';">Profile</button>
+                <button id="profileButton" onclick="location.href = '/profile';">Profile</button>
               </li>
               <li>
                 <button id="logoutButton" onclick="location.href = 'https://www.tumblr.com';">Log Out</button>
@@ -77,33 +77,26 @@
         <div id="question">
             <!--Post Title-->
             <h1>
-              I don't like sand  
+              {{title}}
             </h1>
 
-            <p>
-              I don't like sand. It's coarse
-			        and rough and irritating, and it
-			        gets everywhere. Not like here.
-			        Here everything's soft... and
-			        smooth...
+            <pre>
+              {{post_content}}
 
-            </p>
+            </pre>
 
             <!--[Name of poster]-->
             <div id="poster">
               <h4>
-                Anakin Skywalker
+                {{username}}
               </h4>
 
               <!--[Info of poster]-->
 
               <!--Reduce size of text below-->
               <span style="display: block; margin-bottom: 0.5%;"></span>
-              <font size=""><p>Time as member: 5 years</p></font>
               <span style="display: block; margin-bottom: 0.5%;"></span>
-              <p>Questions asked: 42</p>
-              <span style="display: block; margin-bottom: 0.5%;"></span>
-              <p>Answers given: 69</p>
+              <p>asked on: {{creation_time}}</p>
             </div>
             
 
@@ -111,9 +104,10 @@
 
               <form method="POST">
                 <input type="hidden" value="like" name="like" />
+                <input type="hidden" value="0" name="comment_id" />
                 <input type="image" name="like" id="upvote-button" src="../static/upvote.png" border="0">
                 <h1 id="vote-counter" name="like">
-                  0
+                  {{likes}}
                 </h1>
               </form>
             </div>
@@ -123,10 +117,8 @@
 
               <form method="POST">
                 <input type="hidden" value="dislike" name="like" />
-                <input type="image" name="dilike" id="upvote-button" src="../static/upvote.png" border="0">
-                <h1 id="vote-counter" name="like">
-                  0
-                </h1>
+                <input type="hidden" value="0" name="comment_id" />
+                <input type="image" name="dilike" id="upvote-button" src="../static/downvote.png" border="0">
               </form>
             </div>
 
@@ -139,7 +131,7 @@
             Answer Question
           </h2>
           <form method="POST">
-            <textarea id="question" rows="15" cols="100"></textarea>
+            <textarea id="question" rows="15" cols="100", name="answer"></textarea>
             <input id="postButton" type="submit" value="Post">
           </form>
         </div>
@@ -149,34 +141,51 @@
               Answers
           </h2>
 
-        <!--[Load all comments]-->
-          <div id="comment">
-              <!--[Comment title according to its ID]-->
-              <h4>
-                  It's over, Anakin
-              </h4>
+          {% for comment in comments %}
+            <div id="comment">
 
-              <!--[Load the comment's content according ]-->
-              <p>
-                  I have the high ground.
-              </p>
+                <!--[Load the comment's content according ]-->
+                <pre>
+                    {{comment[CONTENT]}}
+                </p>
 
-              <!--Picture of commenter-->
-              <!--[Name of commenter]-->
-              <h5>
-                Obi Wan Kenobi
-              </h5>
+                <!--Picture of commenter-->
+                <!--[Name of commenter]-->
+                <h5>
+                  {{comment[USERNAME]}}
+                </h5>
 
-              <!--[Info of commenter]-->
-              <!--Reduce size of text below-->
-              <span id="detail-separator"></span>
-              <p id="detail">Time as member: 5 years</p>
-              <span id="detail-separator"></span>
-              <p id="detail">Questions asked: 42</p>
-              <span id="detail-separator"></span>
-              <p id="detail">Answers given: 69</p>
-              <p id="comment-id">1</p>
-          </div>
+                <!--[Info of commenter]-->
+                <!--Reduce size of text below-->
+                <span id="detail-separator"></span>
+                <p id="detail">replied on: {{comment[CREATION_TIME]}}</p>
+                <p id="comment-id">1</p>
+            </div>
+            <div id="votes" name="like">
+
+              <form method="POST">
+                <input type="hidden" value="like" name="like" />
+                <input type="hidden" value={{comment[ID]}} name="comment_id" />
+                <input type="image" name="like" id="upvote-button" src="../static/upvote.png" border="0">
+                <h1 id="vote-counter" name="like">
+                  {{comment[LIKES]}}
+                </h1>
+              </form>
+            </div>
+
+
+            <div id="votes" name="dislike">
+
+              <form method="POST">
+                <input type="hidden" value="dislike" name="like" />
+                <input type="hidden" value={{comment[ID]}} name="comment_id" />
+                <input type="image" name="dilike" id="upvote-button" src="../static/downvote.png" border="0">
+              </form>
+            </div>
+
+
+
+          {% endfor %}
         </div>
       </div>
     <footer id="footer">
