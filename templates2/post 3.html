@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
-
+ 
   <head>
     <!--[Title according to the post's id]-->
     <title>Post Title</title>
-    <link rel="icon" type="image/x-icon" href="../static/wolverine_icon.ico">
-    <link rel="stylesheet" href="../static/style.css">
+    <link rel="icon" type="image/x-icon" href="./images/wolverine_icon.ico">
+    <link rel="stylesheet" href="./style.css">
     <script>
       function upvote() {
           if (document.getElementById('downvote-button').style.filter == "grayscale(100%)"){
             document.getElementById('downvote-button').style.filter = "grayscale(0%)";
           }
-
+ 
           else{
             document.getElementById('upvote-button').style.filter = "grayscale(0%)";
             var current_votes = parseFloat(document.getElementById('vote-counter').innerText);
@@ -20,12 +20,12 @@
             document.getElementById('downvote-button').style.filter = "grayscale(100%)";
           }
       }
-
+ 
       function downvote() {
         if (document.getElementById('upvote-button').style.filter == "grayscale(100%)"){
             document.getElementById('upvote-button').style.filter = "grayscale(0%)";
           }
-        
+       
         else{
           document.getElementById('downvote-button').style.filter = "grayscale(0%)";
           var current_votes = parseFloat(document.getElementById('vote-counter').innerText);
@@ -34,17 +34,17 @@
           document.getElementById('upvote-button').style.filter = "grayscale(100%)";
         }
       }
-
+ 
     </script>
   </head>
-
+ 
   <body id="min-height-body"">
     <header id="topbar">
         <div>
           <a href="/">
-            <img id="logo" src="../static/topbar_logo.png">
+            <img id="logo" src="./topbar_logo.png">
           </a>
-
+ 
           <!--[Take buttons in case the user is yes indeed very much logged in]-->
           <nav id="header-buttons">
             <ul id="buttons-list">
@@ -54,8 +54,8 @@
               <li>
                 <button id="signupButton" onclick="location.href = '/signup';">Sign Up</button>
               </li>
-        
-
+       
+ 
             </ul>
           </nav>
           <!--[Put a profile button in case the user is logged in]-->
@@ -69,63 +69,69 @@
               </li>
             </ul>
           </nav>
-          
+         
         </div>
       </header>
-
+ 
       <div id="body-text">
         <div id="question">
             <!--Post Title-->
             <h1>
               {{title}}
             </h1>
-
+ 
             <pre>
               {{post_content}}
-
+ 
             </pre>
-
+ 
             <!--[Name of poster]-->
             <div id="poster">
               <h4>
                 {{username}}
               </h4>
-
+ 
               <!--[Info of poster]-->
-
+ 
               <!--Reduce size of text below-->
               <span style="display: block; margin-bottom: 0.5%;"></span>
               <span style="display: block; margin-bottom: 0.5%;"></span>
               <p>asked on: {{creation_time}}</p>
             </div>
-            
-
-            <div id="votes" name="like">
-
-              <form method="POST">
-                <input type="hidden" value="like" name="like" />
-                <input type="hidden" value="0" name="comment_id" />
-                <input type="image" name="like" id="upvote-button" src="../static/upvote.png" border="0">
-                <h1 id="vote-counter" name="like">
-                  {{likes}}
-                </h1>
-              </form>
+           
+ 
+            <div id="votes">
+ 
+              <div name="like">  
+                <form method="POST">
+                    <input type="hidden" value="like" name="like" />
+                    <input type="hidden" value="0" name="comment_id" />
+                    <input type="image" name="like" id="upvote-button" src="./images/upvote.png" border="0">
+                    <h1 id="vote-counter" name="like">
+                    {{likes}}
+                    </h1>
+                </form>
+              </div>
+           
+              <div name="dislike">
+                <form method="POST">
+                    <input type="hidden" value="dislike" name="like" />
+                    <input type="hidden" value="0" name="comment_id" />
+                    <input type="image" name="dilike" id="upvote-button" src="./images/downvote.png" border="0">
+                </form>
+              </div>
             </div>
-
-
+ 
+ 
             <div id="votes" name="dislike">
-
-              <form method="POST">
-                <input type="hidden" value="dislike" name="like" />
-                <input type="hidden" value="0" name="comment_id" />
-                <input type="image" name="dilike" id="upvote-button" src="../static/downvote.png" border="0">
-              </form>
+ 
+             
             </div>
-
-
+ 
+ 
             <!--Time when posted-->
         </div>
-
+ 
         <div id="write-answer">
           <h2 style="margin-top: 1%; margin-left: 1%;">
             Answer Question
@@ -135,56 +141,53 @@
             <input id="postButton" type="submit" value="Post">
           </form>
         </div>
-
+ 
         <div id="comments">
           <h2>
               Answers
           </h2>
-
+ 
           {% for comment in comments %}
             <div id="comment">
-
+ 
                 <!--[Load the comment's content according ]-->
                 <pre>
                     {{comment[CONTENT]}}
                 </p>
-
+ 
                 <!--Picture of commenter-->
                 <!--[Name of commenter]-->
                 <h5>
                   {{comment[USERNAME]}}
                 </h5>
-
+ 
                 <!--[Info of commenter]-->
                 <!--Reduce size of text below-->
                 <span id="detail-separator"></span>
                 <p id="detail">replied on: {{comment[CREATION_TIME]}}</p>
                 <p id="comment-id">1</p>
             </div>
-            <div id="votes" name="like">
-
-              <form method="POST">
-                <input type="hidden" value="like" name="like" />
-                <input type="hidden" value={{comment[ID]}} name="comment_id" />
-                <input type="image" name="like" id="upvote-button" src="../static/upvote.png" border="0">
-                <h1 id="vote-counter" name="like">
-                  {{comment[LIKES]}}
-                </h1>
-              </form>
+            <div id="votes">
+             
+              <div>  
+                <form method="POST">
+                    <input type="hidden" value="like" name="like" />
+                    <input type="hidden" value={{comment[ID]}} name="comment_id" />
+                    <input type="image" name="like" id="upvote-button" src="./images/upvote.png" border="0">
+                    <h1 id="vote-counter" name="like">
+                    {{comment[LIKES]}}
+                    </h1>
+                </form>
+              </div>
+ 
+              <div>
+                <form method="POST">
+                    <input type="hidden" value="dislike" name="like" />
+                    <input type="hidden" value={{comment[ID]}} name="comment_id" />
+                    <input type="image" name="dilike" id="upvote-button" src="./downvote.png" border="0">
+                  </form>
+              </div>
             </div>
-
-
-            <div id="votes" name="dislike">
-
-              <form method="POST">
-                <input type="hidden" value="dislike" name="like" />
-                <input type="hidden" value={{comment[ID]}} name="comment_id" />
-                <input type="image" name="dilike" id="upvote-button" src="../static/downvote.png" border="0">
-              </form>
-            </div>
-
-
-
           {% endfor %}
         </div>
       </div>
@@ -197,5 +200,5 @@
       </p>
     </footer>
   </body>
-
+ 
 </html>

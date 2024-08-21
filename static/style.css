@@ -44,11 +44,11 @@ button:hover {
     padding-right: 12px;
 }
 
-#loginButton, #changePicture{
+#loginButton, #changePicture, #profileButton, #postButton{
     background-color: white;
 }
 
-#signupButton, #submit-button{
+#signupButton, #submit-button, #logoutButton{
     background-color: purple;
 }
 
@@ -60,6 +60,7 @@ button:hover {
     padding-top: 8%;
     margin-left: 200px;
     margin-right: 200px;
+    margin-bottom: 2%;
     text-align: justify;
     text-justify: inter-word;
 }
@@ -96,3 +97,155 @@ button:hover {
     margin-top: -12%;
 }
 
+footer{
+    border-top: 3px solid black;
+    background-color: purple;
+    margin-top: auto;
+    width: 101.6%;
+    margin-left: -1%;
+    margin-right: -5%;
+    margin-bottom: -1%;
+    
+}
+
+#min-height-body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#create-post{
+    border: 3px solid purple;
+    border-radius: 8px;
+    margin-bottom: 5%;
+    margin-top: 3%;
+}
+
+#write-answer{
+    border: 3px solid purple;
+    border-radius: 8px;
+    margin-bottom: 5%;
+    margin-top: 10%;
+}
+
+#poster{
+    border: 1px solid black;
+    border-radius: 8px;
+    margin-bottom: 2%;
+    padding-left: 1%;
+    padding-right: 1%;
+    margin-top: 7%;
+    width: fit-content;
+}
+
+#comments{
+    border-top: 1px solid grey;
+    margin-top: 7%;
+}
+
+#comment{
+    border: 1px solid black;
+    border-radius: 8px;
+    padding-left: 1%;
+}
+
+#votes{
+    float: right;
+    margin-top: -27%;
+}
+
+#upvote, #downvote{
+    border: none;
+    cursor: pointer;
+    appearance: none;
+    background-color: inherit;
+}
+
+#vote-counter{
+    text-align: center;
+}
+
+#detail-separator{
+    display: block; 
+    margin-bottom: -1.5%;
+}
+
+#detail{
+    font-size: 12px;
+}
+
+#question{
+    margin-left: 7%;
+    margin-bottom: 3%;
+    resize: none;
+}
+
+#postButton{
+    margin-left: 90%;
+    margin-bottom: 2%;
+    margin-top: -2%;
+    border: 0.1px solid grey;
+    transition-duration: 0.4s;
+    border-radius: 8px;
+    font-size: 17px;
+}
+
+#comment-id{
+    display: none;
+}
+
+#post{
+    border-top: 1px solid grey;
+}
+.bounds {
+    width: 1200px;
+    height: 600px;
+}
+  
+@keyframes hor-movement {
+    from {
+        margin-left: 0%;
+    }
+    to {
+        margin-left: 100%;
+    }
+}
+
+@keyframes ver-movement {
+    from {
+        margin-top: 0%;
+    }
+    to {
+        margin-top: 100%;
+    }
+}
+
+@keyframes spin{
+    100% { 
+        -webkit-transform: rotate(360deg); 
+        transform:rotate(360deg); 
+    } 
+}
+
+@-moz-keyframes spin{
+    100% { -moz-transform: rotate(360deg); } 
+}
+
+@-webkit-keyframes spin{
+    100% { -webkit-transform: rotate(360deg); } 
+}
+
+.wolverine {
+    animation-name: hor-movement, ver-movement, spin;
+    animation-duration: 3.141s, 1.414s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+
+    width: 30%; 
+    height: 30%;
+}
